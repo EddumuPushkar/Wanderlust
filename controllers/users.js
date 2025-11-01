@@ -23,7 +23,7 @@ module.exports.renderSignupForm = (req, res) => {
     req.flash("error", "You are already logged in!");
     return res.redirect("/listings");
   }
-  res.render("users/signup");
+  res.render("users/signup.ejs");
 };
 
 module.exports.signup = async (req, res) => {
@@ -187,12 +187,12 @@ module.exports.resendOtp = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       req.flash("error", "No account found with that email.");
-      return res.redirect("users/signup");
+      return res.redirect("/signup");
     }
 
     if (user.isVerified) {
       req.flash("error", "Account already verified. Please log in.");
-      return res.redirect("users/login");
+      return res.redirect("/login");
     }
 
     // 2. Generate new OTP
@@ -222,7 +222,7 @@ module.exports.resendOtp = async (req, res) => {
         "error",
         "Could not send verification email. Please try again."
       );
-      return res.redirect("users/signup");
+      return res.redirect("/signup");
     }
   } catch (err) {
     console.error("Resend OTP error:", err);
@@ -230,7 +230,7 @@ module.exports.resendOtp = async (req, res) => {
       "error",
       "An error occurred while resending OTP. Please try again."
     );
-    return res.redirect(`users/verify?email=${req.body.email}`);
+    return res.redirect(`/verify?email=${req.body.email}`);
   }
 };
 module.exports.renderLoginForm = (req, res) => {
@@ -271,7 +271,7 @@ module.exports.login = async (req, res, next) => {
           "error",
           "Could not send verification email. Please try again."
         );
-        return res.redirect("users/login");
+        return res.redirect("/login");
         }
       });
     } else {
@@ -283,7 +283,7 @@ module.exports.login = async (req, res, next) => {
   catch(err){
     console.error("Login error:", err);
     req.flash("error", "Something went wrong during login.");
-    return res.redirect("/users/login")
+    return res.redirect("/login")
   }
 };
 
